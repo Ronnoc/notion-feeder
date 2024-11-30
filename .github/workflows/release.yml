@@ -32,6 +32,9 @@ jobs:
         if: steps.cache-npm-dependencies.outputs.cache-hit != 'true'
         run: npm ci  # `npm ci` is preferred for CI environments
 
+      - name: Format code with Prettier
+        run: npx prettier --write .
+
       - name: Build Project
         run: npm run build-prod
 
