@@ -48225,11 +48225,13 @@ const {
 } = process.env;
 
 async function getNewFeedItemsFrom(feedUrl) {
-  const parser = new (rss_parser_default())();
+  const parser = new (rss_parser_default())({
+    timeout: 5000
+  });
   let rss;
   let attempts = 0;
   const maxAttempts = 3;
-  const retryDelay = 3000; // Delay in milliseconds before retrying
+  const retryDelay = 500; // Delay in milliseconds before retrying
 
   while (attempts < maxAttempts) {
     try {
