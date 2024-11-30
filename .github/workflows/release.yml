@@ -48,7 +48,6 @@ jobs:
             echo "Changes detected in dist, committing..."
             git config user.name "GitHub Actions"
             git config user.email "noreply@github.com"
-            git add dist
             git commit -m "chore: updated build"
             git push origin HEAD --force
           else
