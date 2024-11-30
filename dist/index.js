@@ -56818,7 +56818,7 @@ async function addFeedItemToNotion(notionItem) {
       filter: {
         or: [{
           property: 'guid',
-          text: {
+          url: {
             equals: guid
           }
         }]
@@ -56850,9 +56850,7 @@ async function addFeedItemToNotion(notionItem) {
           url: link
         },
         guid: {
-          text: {
-            content: guid
-          }
+          url: guid
         }
       },
       children: content
