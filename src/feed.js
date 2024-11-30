@@ -24,7 +24,7 @@ async function getNewFeedItemsFrom(feedUrl) {
     // add feedUrl to each item
     rss.items = rss.items.map((item) => ({
       ...item,
-      feedUrl: feedUrl,
+      feedUrl,
     }));
 
     return rss.items;
