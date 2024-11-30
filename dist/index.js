@@ -56803,12 +56803,35 @@ async function addFeedItemToNotion(notionItem) {
   const {
     title,
     link,
-    content
+    content,
+    guid
   } = notionItem;
   const notion = new src/* Client */.KU({
     auth: NOTION_API_TOKEN,
     logLevel
   });
+  let response;
+
+  try {
+    response = await notion.databases.query({
+      database_id: NOTION_READER_DATABASE_ID,
+      filter: {
+        or: [{
+          property: 'guid',
+          text: {
+            equals: guid
+          }
+        }]
+      }
+    });
+  } catch (err) {
+    console.error(err);
+  }
+
+  if (response.results.length > 0) {
+    console.log(`Feed item with guid ${guid} already exists in the database`);
+    return;
+  }
 
   try {
     await notion.pages.create({
@@ -56825,6 +56848,11 @@ async function addFeedItemToNotion(notionItem) {
         },
         Link: {
           url: link
+        },
+        guid: {
+          text: {
+            content: guid
+          }
         }
       },
       children: content
@@ -56834,7 +56862,7 @@ async function addFeedItemToNotion(notionItem) {
   }
 }
 async function deleteOldUnreadFeedItemsFromNotion() {
-  const notion = new src/* Client */.KU({
+  const notion = new Client({
     auth: NOTION_API_TOKEN,
     logLevel
   }); // Create a datetime which is 30 days earlier than the current time
@@ -57909,11 +57937,11 @@ function jsonToNotionBlocks(markdownContent) {
 }
 
 function htmlToNotionBlocks(htmlContent) {
-  console.log('Parsing HTML content ', htmlContent);
-  const markdownJson = htmlToMarkdownJSON(htmlContent);
-  console.log('Parsed markdownJson:', markdownJson);
-  const notionBlocks = jsonToNotionBlocks(markdownJson);
-  console.log('Parsed notionBlocks (JSON):', JSON.stringify(notionBlocks, null, 2)); // if notionBlocks length is greater than 100, resize to 100
+  // console.log('Parsing HTML content ', htmlContent);
+  const markdownJson = htmlToMarkdownJSON(htmlContent); // console.log('Parsed markdownJson:', markdownJson);
+
+  const notionBlocks = jsonToNotionBlocks(markdownJson); // console.log('Parsed notionBlocks (JSON):', JSON.stringify(notionBlocks, null, 2));
+  // if notionBlocks length is greater than 100, resize to 100
   // as Notion API has a limit of 100 blocks per request
   // if (notionBlocks.length > 100) {
   //   notionBlocks.length = 100;
@@ -57940,16 +57968,16 @@ async function index() {
       const notionItem = {
         title: item.title,
         link: item.link,
-        content: htmlToNotionBlocks(item['content:encoded'])
+        content: htmlToNotionBlocks(item.content),
+        guid: item.guid
       };
       console.log(`Adding feed item to Notion: ${notionItem.title}`);
       await addFeedItemToNotion(notionItem);
       console.log(`Feed item added: ${notionItem.title}`);
-    }
+    } // console.log('Deleting old unread feed items from Notion...');
+    // await deleteOldUnreadFeedItemsFromNotion();
+    // console.log('Old unread feed items deleted');
 
-    console.log('Deleting old unread feed items from Notion...');
-    await deleteOldUnreadFeedItemsFromNotion();
-    console.log('Old unread feed items deleted');
   } catch (error) {
     console.error('Error during process:', error.message);
 
