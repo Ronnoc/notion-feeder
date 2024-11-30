@@ -48237,7 +48237,7 @@ async function getNewFeedItemsFrom(feedUrl) {
       break; // Exit loop if request is successful
     } catch (error) {
       attempts++;
-      console.error(`Error fetching feed from ${feedUrl} (Attempt ${attempts}):`, error.message);
+      console.error(`Error fetching feed from ${feedUrl} (Attempt ${attempts}):\n` + `${error.message}`);
 
       if (attempts >= maxAttempts) {
         console.error(`Failed to fetch feed after ${maxAttempts} attempts.`);
