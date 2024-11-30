@@ -57915,10 +57915,9 @@ function htmlToNotionBlocks(htmlContent) {
   const notionBlocks = jsonToNotionBlocks(markdownJson);
   console.log('Parsed notionBlocks (JSON):', JSON.stringify(notionBlocks, null, 2)); // if notionBlocks length is greater than 100, resize to 100
   // as Notion API has a limit of 100 blocks per request
-
-  if (notionBlocks.length > 100) {
-    notionBlocks.length = 100;
-  }
+  // if (notionBlocks.length > 100) {
+  //   notionBlocks.length = 100;
+  // }
 
   return notionBlocks;
 }
@@ -57935,14 +57934,13 @@ async function index() {
     console.log(`Retrieved ${feedItems.length} feed items`);
 
     for (let i = 0; i < feedItems.length; i++) {
-      const item = feedItems[i];
-      const {
-        data: pageData
-      } = await lib_axios.get(item.link, {});
+      const item = feedItems[i]; // const { data: pageData } = await axios.get(item.link, {
+      // });
+
       const notionItem = {
         title: item.title,
         link: item.link,
-        content: htmlToNotionBlocks(pageData)
+        content: htmlToNotionBlocks(item['content:encoded'])
       };
       console.log(`Adding feed item to Notion: ${notionItem.title}`);
       await addFeedItemToNotion(notionItem);
