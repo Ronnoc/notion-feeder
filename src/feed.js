@@ -10,14 +10,12 @@ const { RUN_FREQUENCY } = process.env;
 
 async function getNewFeedItemsFrom(feedUrl) {
   const parser = new Parser();
-  
+
   try {
     // Fetch the RSS feed as a string using axios
     const { data: rssString } = await axios.get(feedUrl, {
     });
 
-    // Debug: Log the raw RSS string to inspect its contents
-    console.log('Raw RSS Feed String:', rssString);
     // Parse the RSS string into a JSON object
     const rss = await parser.parseString(rssString);
     // Debug: Log the parsed JSON object to check its structure

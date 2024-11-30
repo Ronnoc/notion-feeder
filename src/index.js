@@ -1,3 +1,4 @@
+import axios from 'axios';
 import getNewFeedItems from './feed';
 import {
   addFeedItemToNotion,
@@ -13,10 +14,14 @@ async function index() {
 
     for (let i = 0; i < feedItems.length; i++) {
       const item = feedItems[i];
+
+      const { data: pageData } = await axios.get(item.link, {
+      });
+
       const notionItem = {
         title: item.title,
         link: item.link,
-        content: htmlToNotionBlocks(item.content),
+        content: htmlToNotionBlocks(pageData),
       };
 
       console.log(`Adding feed item to Notion: ${notionItem.title}`);
