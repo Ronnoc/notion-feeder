@@ -35,27 +35,6 @@ jobs:
       - name: Build Project
         run: npm run build-prod
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist
-          path: dist
-
-  commit-build:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Repository
-        uses: actions/checkout@v3
-        with:
-          ref: build
-
-      - name: Download Build
-        uses: actions/download-artifact@v3
-        with:
-          name: dist
-          path: dist
-
       - name: Commit and Push
         run: |
           if [ $(git status dist --porcelain=v1 2>/dev/null | wc -l) != "0" ] ; then
