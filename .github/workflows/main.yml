@@ -28,9 +28,9 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 18
 
       - name: Update Notion Feed js
         run: |
-          curl -o index.js https://raw.githubusercontent.com/ravgeetdhillon/notion-feeder/build/dist/index.js
+          curl -o index.js https://raw.githubusercontent.com/Ronnoc/notion-feeder/refs/heads/master/dist/index.js
           node index.js
