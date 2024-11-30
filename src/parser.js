@@ -17,5 +17,6 @@ function jsonToNotionBlocks(markdownContent) {
 
 export default function htmlToNotionBlocks(htmlContent) {
   const markdownJson = htmlToMarkdownJSON(htmlContent);
+  console.log('Parsed markdownJson (JSON):', JSON.stringify(markdownJson, null, 2));
   return jsonToNotionBlocks(markdownJson);
 }
