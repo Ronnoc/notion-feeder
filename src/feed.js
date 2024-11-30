@@ -15,9 +15,13 @@ async function getNewFeedItemsFrom(feedUrl) {
     // Fetch the RSS feed as a string using axios
     const { data: rssString } = await axios.get(feedUrl, {
     });
-    
+
+    // Debug: Log the raw RSS string to inspect its contents
+    console.log('Raw RSS Feed String:', rssString);
     // Parse the RSS string into a JSON object
     const rss = await parser.parseString(rssString);
+    // Debug: Log the parsed JSON object to check its structure
+    console.log('Parsed RSS Feed (JSON):', JSON.stringify(rss, null, 2));
 
     const currentTime = new Date().getTime() / 1000;
 
