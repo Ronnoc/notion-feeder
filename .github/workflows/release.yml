@@ -35,9 +35,14 @@ jobs:
       - name: Build Project
         run: npm run build-prod
 
-      - name: Check changes and commit
+      - name: List files in dist directory
         run: |
-          git status dist
+          echo "Listing contents of dist directory..."
+          ls -R dist || echo "dist directory not found."
+
+      - name: Check for changes in dist and commit
+        run: |
+          echo "Checking for changes in dist folder..."
           if [ -d "dist" ] && [ $(git status dist --porcelain=v1 2>/dev/null | wc -l) -gt 0 ]; then
             echo "Changes detected in dist, committing..."
             git config user.name "GitHub Actions"
