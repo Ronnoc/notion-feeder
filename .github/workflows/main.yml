@@ -22,4 +22,6 @@ jobs:
       - name: Update Notion Feed
         run: |
           curl -o index.js https://raw.githubusercontent.com/ravgeetdhillon/notion-feeder/build/dist/index.js
+          echo $NOTION_FEEDS_DATABASE_ID
+          echo $NOTION_READER_DATABASE_ID
           node index.js
