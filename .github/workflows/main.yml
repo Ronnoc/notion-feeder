@@ -17,6 +17,9 @@ jobs:
       NOTION_FEEDS_DATABASE_ID: ${{ secrets.NOTION_FEEDS_DATABASE_ID }}
       RUN_FREQUENCY: 86400 # in seconds
     steps:
+      - name: List Repository Files
+        run: ls -R
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
