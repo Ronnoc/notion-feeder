@@ -17,18 +17,21 @@ jobs:
       NOTION_FEEDS_DATABASE_ID: ${{ secrets.NOTION_FEEDS_DATABASE_ID }}
       RUN_FREQUENCY: 86400 # in seconds
     steps:
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16 # Ensure compatibility with the Notion SDK
 
-      - name: Debug Notion Feed IDs
+      - name: Install Dependencies
+        run: npm install @notionhq/client
+
+      - name: Fetch Items from Feeds Database
         run: |
-          echo "NOTION_FEEDS_DATABASE_ID=$NOTION_FEEDS_DATABASE_ID"
-          echo "NOTION_READER_DATABASE_ID=$NOTION_READER_DATABASE_ID"
+          echo "Fetching data from the Notion Feeds database..."
+          node fetch-feeds.js
         env:
+          NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
           NOTION_FEEDS_DATABASE_ID: ${{ secrets.NOTION_FEEDS_DATABASE_ID }}
-          NOTION_READER_DATABASE_ID: ${{ secrets.NOTION_READER_DATABASE_ID }}
 
       - name: Update Notion Feed
         run: |
