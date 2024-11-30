@@ -57935,17 +57935,19 @@ function jsonToNotionBlocks(markdownContent) {
   return (0,build_src.markdownToBlocks)(markdownContent);
 }
 
-function htmlToNotionBlocks(htmlContent) {
+function htmlToNotionBlocks(htmlContent, url) {
   // console.log('Parsing HTML content ', htmlContent);
   const markdownJson = htmlToMarkdownJSON(htmlContent); // console.log('Parsed markdownJson:', markdownJson);
 
-  const notionBlocks = jsonToNotionBlocks(markdownJson); // console.log('Parsed notionBlocks (JSON):', JSON.stringify(notionBlocks, null, 2));
-  // if notionBlocks length is greater than 100, resize to 100
-  // as Notion API has a limit of 100 blocks per request
-  // if (notionBlocks.length > 100) {
-  //   notionBlocks.length = 100;
-  // }
+  const notionBlocks = jsonToNotionBlocks(markdownJson); // append Emb notion block
 
+  notionBlocks.push({
+    object: 'block',
+    type: 'embed',
+    embed: {
+      url
+    }
+  });
   return notionBlocks;
 }
 ;// CONCATENATED MODULE: ./src/index.js
@@ -57967,7 +57969,7 @@ async function index() {
       const notionItem = {
         title: item.title,
         link: item.link,
-        content: htmlToNotionBlocks(item.content),
+        content: htmlToNotionBlocks(item.content, item.link),
         guid: item.guid,
         feedUrl: item.feedUrl,
         pubDate: item.pubDate
