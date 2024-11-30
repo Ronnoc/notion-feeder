@@ -7,7 +7,7 @@ import htmlToNotionBlocks from './parser';
 
 async function index() {
   try {
-    console.log("Fetching new feed items...");
+    console.log('Fetching new feed items...');
     const feedItems = await getNewFeedItems();
     console.log(`Retrieved ${feedItems.length} feed items`);
 
@@ -24,11 +24,11 @@ async function index() {
       console.log(`Feed item added: ${notionItem.title}`);
     }
 
-    console.log("Deleting old unread feed items from Notion...");
+    console.log('Deleting old unread feed items from Notion...');
     await deleteOldUnreadFeedItemsFromNotion();
-    console.log("Old unread feed items deleted");
+    console.log('Old unread feed items deleted');
   } catch (error) {
-    console.error("Error during process:", error.message);
+    console.error('Error during process:', error.message);
     if (error.stack) {
       console.error(error.stack);
     }
