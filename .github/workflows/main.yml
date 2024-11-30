@@ -10,7 +10,6 @@ on:
 
 jobs:
   get-feed:
-    name: Run rust
     runs-on: ubuntu-latest
     env:
       NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
