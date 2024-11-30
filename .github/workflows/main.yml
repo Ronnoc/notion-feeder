@@ -33,4 +33,5 @@ jobs:
 
       - name: Update Notion Feed
         run: |
-          node src/index.js
+          curl -o index.js https://raw.githubusercontent.com/ravgeetdhillon/notion-feeder/build/dist/index.js
+          node index.js
