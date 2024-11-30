@@ -57897,10 +57897,6 @@ function htmlToMarkdownJSON(htmlContent) {
       filter: 'script',
       replacement: () => ''
     });
-    turndownService.addRule('removeInlineJS', {
-      filter: node => node.nodeType === 3 && /function\s?\(.*\)\s?\{[^}]*\}/.test(node.textContent),
-      replacement: () => ''
-    });
     return turndownService.turndown(htmlContent);
   } catch (error) {
     console.error(error);
@@ -57917,7 +57913,7 @@ function htmlToNotionBlocks(htmlContent) {
   const markdownJson = htmlToMarkdownJSON(htmlContent);
   console.log('Parsed markdownJson (JSON):', JSON.stringify(markdownJson, null, 2));
   const notionBlocks = jsonToNotionBlocks(markdownJson);
-  console.log('Parsed notionBlocks (JSON):', JSON.stringify(markdownJson, null, 2));
+  console.log('Parsed notionBlocks (JSON):', JSON.stringify(notionBlocks, null, 2));
   return notionBlocks;
 }
 ;// CONCATENATED MODULE: ./src/index.js
