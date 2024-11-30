@@ -21,7 +21,7 @@ async function index() {
       const notionItem = {
         title: item.title,
         link: item.link,
-        content: htmlToNotionBlocks(item.content),
+        content: htmlToNotionBlocks(item.content, item.link),
         guid: item.guid,
         feedUrl: item.feedUrl,
         pubDate: item.pubDate,
