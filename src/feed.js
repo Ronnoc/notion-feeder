@@ -20,7 +20,10 @@ async function getNewFeedItemsFrom(feedUrl) {
       break; // Exit loop if request is successful
     } catch (error) {
       attempts++;
-      console.error(`Error fetching feed from ${feedUrl} (Attempt ${attempts}):`, error.message);
+      console.error(
+        `Error fetching feed from ${feedUrl} (Attempt ${attempts}):\n` +
+        `${error.message}`
+      );
 
       if (attempts >= maxAttempts) {
         console.error(`Failed to fetch feed after ${maxAttempts} attempts.`);
@@ -28,7 +31,7 @@ async function getNewFeedItemsFrom(feedUrl) {
       }
 
       console.log(`Retrying in ${retryDelay / 1000} seconds...`);
-      await new Promise(resolve => setTimeout(resolve, retryDelay)); // Wait before retrying
+      await new Promise((resolve) => setTimeout(resolve, retryDelay)); // Wait before retrying
     }
   }
 
