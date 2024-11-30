@@ -4,6 +4,17 @@ import TurndownService from 'turndown';
 function htmlToMarkdownJSON(htmlContent) {
   try {
     const turndownService = new TurndownService();
+    // Custom rule to remove all <script> tags and inline JS functions
+    turndownService.addRule('removeScriptTags', {
+      filter: 'script',
+      replacement: () => ''
+    });
+
+    turndownService.addRule('removeInlineJS', {
+      filter: (node) => node.nodeType === 3 && /function\s?\(.*\)\s?\{[^}]*\}/.test(node.textContent),
+      replacement: () => ''
+    });
+
     return turndownService.turndown(htmlContent);
   } catch (error) {
     console.error(error);
@@ -16,7 +27,10 @@ function jsonToNotionBlocks(markdownContent) {
 }
 
 export default function htmlToNotionBlocks(htmlContent) {
+  console.log('Parsing HTML content ', htmlContent);
   const markdownJson = htmlToMarkdownJSON(htmlContent);
   console.log('Parsed markdownJson (JSON):', JSON.stringify(markdownJson, null, 2));
-  return jsonToNotionBlocks(markdownJson);
+  const notionBlocks = jsonToNotionBlocks(markdownJson);
+  console.log('Parsed notionBlocks (JSON):', JSON.stringify(markdownJson, null, 2));
+  return notionBlocks;
 }
