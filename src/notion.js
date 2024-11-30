@@ -47,12 +47,36 @@ export async function getFeedUrlsFromNotion() {
 }
 
 export async function addFeedItemToNotion(notionItem) {
-  const { title, link, content } = notionItem;
+  const { title, link, content, guid } = notionItem;
 
   const notion = new Client({
     auth: NOTION_API_TOKEN,
     logLevel,
   });
+
+  let response;
+  try {
+    response = await notion.databases.query({
+      database_id: NOTION_READER_DATABASE_ID,
+      filter: {
+        or: [
+          {
+            property: 'guid',
+            text: {
+              equals: guid,
+            },
+          },
+        ],
+      },
+    });
+  } catch (err) {
+    console.error(err);
+  }
+
+  if (response.results.length > 0) {
+    console.log(`Feed item with guid ${guid} already exists in the database`);
+    return;
+  }
 
   try {
     await notion.pages.create({
@@ -72,6 +96,11 @@ export async function addFeedItemToNotion(notionItem) {
         Link: {
           url: link,
         },
+        guid: {
+          text: {
+            content: guid,
+          }
+        }
       },
       children: content,
     });

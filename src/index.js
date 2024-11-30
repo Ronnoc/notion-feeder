@@ -21,7 +21,8 @@ async function index() {
       const notionItem = {
         title: item.title,
         link: item.link,
-        content: htmlToNotionBlocks(item["content:encoded"]),
+        content: htmlToNotionBlocks(item.content),
+        guid: item.guid,
       };
 
       console.log(`Adding feed item to Notion: ${notionItem.title}`);
@@ -29,9 +30,9 @@ async function index() {
       console.log(`Feed item added: ${notionItem.title}`);
     }
 
-    console.log('Deleting old unread feed items from Notion...');
-    await deleteOldUnreadFeedItemsFromNotion();
-    console.log('Old unread feed items deleted');
+    // console.log('Deleting old unread feed items from Notion...');
+    // await deleteOldUnreadFeedItemsFromNotion();
+    // console.log('Old unread feed items deleted');
   } catch (error) {
     console.error('Error during process:', error.message);
     if (error.stack) {
