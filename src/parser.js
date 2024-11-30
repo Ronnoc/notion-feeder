@@ -29,8 +29,8 @@ export default function htmlToNotionBlocks(htmlContent) {
   console.log('Parsed notionBlocks (JSON):', JSON.stringify(notionBlocks, null, 2));
   // if notionBlocks length is greater than 100, resize to 100
   // as Notion API has a limit of 100 blocks per request
-  if (notionBlocks.length > 100) {
-    notionBlocks.length = 100;
-  }
+  // if (notionBlocks.length > 100) {
+  //   notionBlocks.length = 100;
+  // }
   return notionBlocks;
 }

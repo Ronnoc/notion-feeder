@@ -15,13 +15,13 @@ async function index() {
     for (let i = 0; i < feedItems.length; i++) {
       const item = feedItems[i];
 
-      const { data: pageData } = await axios.get(item.link, {
-      });
+      // const { data: pageData } = await axios.get(item.link, {
+      // });
 
       const notionItem = {
         title: item.title,
         link: item.link,
-        content: htmlToNotionBlocks(pageData),
+        content: htmlToNotionBlocks(item["content:encoded"]),
       };
 
       console.log(`Adding feed item to Notion: ${notionItem.title}`);
