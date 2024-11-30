@@ -7,7 +7,7 @@ function htmlToMarkdownJSON(htmlContent) {
     // Custom rule to remove all <script> tags and inline JS functions
     turndownService.addRule('removeScriptTags', {
       filter: 'script',
-      replacement: () => ''
+      replacement: () => '',
     });
 
     return turndownService.turndown(htmlContent);

@@ -13,8 +13,7 @@ async function getNewFeedItemsFrom(feedUrl) {
 
   try {
     // Fetch the RSS feed as a string using axios
-    const { data: rssString } = await axios.get(feedUrl, {
-    });
+    const { data: rssString } = await axios.get(feedUrl, {});
 
     // Parse the RSS string into a JSON object
     const rss = await parser.parseString(rssString);
@@ -28,7 +27,6 @@ async function getNewFeedItemsFrom(feedUrl) {
     }));
 
     return rss.items;
-
   } catch (error) {
     console.error(error);
     return [];
