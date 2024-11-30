@@ -1,3 +1,4 @@
+import axios from 'axios';
 import Parser from 'rss-parser';
 import dotenv from 'dotenv';
 import timeDifference from './helpers';
@@ -8,28 +9,29 @@ dotenv.config();
 const { RUN_FREQUENCY } = process.env;
 
 async function getNewFeedItemsFrom(feedUrl) {
-  const parser = new Parser(
-    {
-      timeout: 5000,
-      maxRedirects: 100,
-      rejectUnauthorized: false,
-    }
-  );
-  let rss;
+  const parser = new Parser();
+  
   try {
-    rss = await parser.parseURL(feedUrl);
+    // Fetch the RSS feed as a string using axios
+    const { data: rssString } = await axios.get(feedUrl, {
+    });
+    
+    // Parse the RSS string into a JSON object
+    const rss = await parser.parseString(rssString);
+
+    const currentTime = new Date().getTime() / 1000;
+
+    // Filter out items that fall in the run frequency range
+    return rss.items.filter((item) => {
+      const blogPublishedTime = new Date(item.pubDate).getTime() / 1000;
+      const { diffInSeconds } = timeDifference(currentTime, blogPublishedTime);
+      return diffInSeconds < RUN_FREQUENCY;
+    });
+
   } catch (error) {
     console.error(error);
     return [];
   }
-  const currentTime = new Date().getTime() / 1000;
-
-  // Filter out items that fall in the run frequency range
-  return rss.items.filter((item) => {
-    const blogPublishedTime = new Date(item.pubDate).getTime() / 1000;
-    const { diffInSeconds } = timeDifference(currentTime, blogPublishedTime);
-    return diffInSeconds < RUN_FREQUENCY;
-  });
 }
 
 export default async function getNewFeedItems() {
