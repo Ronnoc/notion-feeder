@@ -23,6 +23,8 @@ async function index() {
         link: item.link,
         content: htmlToNotionBlocks(item.content),
         guid: item.guid,
+        feedUrl: item.feedUrl,
+        pubDate: item.pubDate,
       };
 
       console.log(`Adding feed item to Notion: ${notionItem.title}`);

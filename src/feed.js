@@ -21,14 +21,12 @@ async function getNewFeedItemsFrom(feedUrl) {
     // Debug: Log the parsed JSON object to check its structure
     console.log('Parsed RSS Feed (JSON):', JSON.stringify(rss, null, 2));
 
-    const currentTime = new Date().getTime() / 1000;
-
-    // Filter out items that fall in the run frequency range
-    return rss.items.filter((item) => {
-      const blogPublishedTime = new Date(item.pubDate).getTime() / 1000;
-      const { diffInSeconds } = timeDifference(currentTime, blogPublishedTime);
-      return diffInSeconds < RUN_FREQUENCY;
+    // add feedUrl to each item
+    rss.items.forEach((item) => {
+      item.feedUrl = feedUrl;
     });
+
+    return rss.items;
 
   } catch (error) {
     console.error(error);

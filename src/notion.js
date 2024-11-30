@@ -46,8 +46,16 @@ export async function getFeedUrlsFromNotion() {
   return feeds;
 }
 
+// Function to convert the pubDate string to ISO format
+function convertToISO(pubDate) {
+  const options = { timeZone: 'Asia/Singapore' }; // Adjust time zone if needed
+  const date = new Date(pubDate);
+  return date.toISOString(); // Converts the date to ISO format
+}
+
 export async function addFeedItemToNotion(notionItem) {
-  const { title, link, content, guid } = notionItem;
+  const { title, link, content, guid, feedUrl, pubDate } = notionItem;
+  const formattedPubDate = convertToISO(pubDate);
 
   const notion = new Client({
     auth: NOTION_API_TOKEN,
@@ -98,7 +106,15 @@ export async function addFeedItemToNotion(notionItem) {
         },
         guid: {
           url: guid,
-        }
+        },
+        Feed: {
+          url: feedUrl,
+        },
+        pubDate: {
+          date: {
+            start: formattedPubDate,
+          },
+        },
       },
       children: content,
     });
