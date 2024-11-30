@@ -35,12 +35,16 @@ jobs:
       - name: Build Project
         run: npm run build-prod
 
-      - name: Commit and Push
+      - name: Check changes and commit
         run: |
-          if [ $(git status dist --porcelain=v1 2>/dev/null | wc -l) != "0" ] ; then
+          git status dist
+          if [ -d "dist" ] && [ $(git status dist --porcelain=v1 2>/dev/null | wc -l) -gt 0 ]; then
+            echo "Changes detected in dist, committing..."
             git config user.name "GitHub Actions"
-            git config user.email noreply@github.com
+            git config user.email "noreply@github.com"
             git add dist
             git commit -m "chore: updated build"
             git push origin HEAD --force
+          else
+            echo "No changes detected in dist, skipping commit."
           fi
