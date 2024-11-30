@@ -56740,22 +56740,6 @@ var rss_parser = __webpack_require__(5003);
 var rss_parser_default = /*#__PURE__*/__webpack_require__.n(rss_parser);
 // EXTERNAL MODULE: ./node_modules/dotenv/lib/main.js
 var main = __webpack_require__(9738);
-;// CONCATENATED MODULE: ./src/helpers.js
-function timeDifference(date1, date2) {
-  const difference = Math.floor(date1) - Math.floor(date2);
-  const diffInDays = Math.floor(difference / 60 / 60 / 24);
-  const diffInHours = Math.floor(difference / 60 / 60);
-  const diffInMinutes = Math.floor(difference / 60);
-  const diffInSeconds = Math.floor(difference);
-  return {
-    date1,
-    date2,
-    diffInDays,
-    diffInHours,
-    diffInMinutes,
-    diffInSeconds
-  };
-}
 // EXTERNAL MODULE: ./node_modules/@notionhq/client/build/src/index.js
 var src = __webpack_require__(9267);
 ;// CONCATENATED MODULE: ./src/notion.js
@@ -56798,14 +56782,27 @@ async function getFeedUrlsFromNotion() {
     feedUrl: item.properties.Link.url
   }));
   return feeds;
+} // Function to convert the pubDate string to ISO format
+
+function convertToISO(pubDate) {
+  const options = {
+    timeZone: 'Asia/Singapore'
+  }; // Adjust time zone if needed
+
+  const date = new Date(pubDate);
+  return date.toISOString(); // Converts the date to ISO format
 }
+
 async function addFeedItemToNotion(notionItem) {
   const {
     title,
     link,
     content,
-    guid
+    guid,
+    feedUrl,
+    pubDate
   } = notionItem;
+  const formattedPubDate = convertToISO(pubDate);
   const notion = new src/* Client */.KU({
     auth: NOTION_API_TOKEN,
     logLevel
@@ -56851,6 +56848,14 @@ async function addFeedItemToNotion(notionItem) {
         },
         guid: {
           url: guid
+        },
+        Feed: {
+          url: feedUrl
+        },
+        pubDate: {
+          date: {
+            start: formattedPubDate
+          }
         }
       },
       children: content
@@ -56931,16 +56936,12 @@ async function getNewFeedItemsFrom(feedUrl) {
 
     const rss = await parser.parseString(rssString); // Debug: Log the parsed JSON object to check its structure
 
-    console.log('Parsed RSS Feed (JSON):', JSON.stringify(rss, null, 2));
-    const currentTime = new Date().getTime() / 1000; // Filter out items that fall in the run frequency range
+    console.log('Parsed RSS Feed (JSON):', JSON.stringify(rss, null, 2)); // add feedUrl to each item
 
-    return rss.items.filter(item => {
-      const blogPublishedTime = new Date(item.pubDate).getTime() / 1000;
-      const {
-        diffInSeconds
-      } = timeDifference(currentTime, blogPublishedTime);
-      return diffInSeconds < RUN_FREQUENCY;
-    });
+    rss.items = rss.items.map(item => Object.assign({}, item, {
+      feedUrl
+    }));
+    return rss.items;
   } catch (error) {
     console.error(error);
     return [];
@@ -57967,7 +57968,9 @@ async function index() {
         title: item.title,
         link: item.link,
         content: htmlToNotionBlocks(item.content),
-        guid: item.guid
+        guid: item.guid,
+        feedUrl: item.feedUrl,
+        pubDate: item.pubDate
       };
       console.log(`Adding feed item to Notion: ${notionItem.title}`);
       await addFeedItemToNotion(notionItem);
