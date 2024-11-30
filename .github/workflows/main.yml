@@ -22,12 +22,6 @@ jobs:
       NOTION_FEEDS_DATABASE_ID: ${{ secrets.NOTION_FEEDS_DATABASE_ID }}
       RUN_FREQUENCY: 86400 # in seconds
     steps:
-      - name: Update Notion Feed
-        run: |
-          curl -L -o notion-feed https://github.com/abereghici/notion-feed.rs/raw/build/build/notion-feed 
-          chmod +x ./notion-feed 
-          ./notion-feed
-
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
