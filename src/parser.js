@@ -31,7 +31,7 @@ export default function htmlToNotionBlocks(htmlContent, url) {
     object: 'block',
     type: 'embed',
     embed: {
-      url: url,
+      url,
     },
   });
   return notionBlocks;
