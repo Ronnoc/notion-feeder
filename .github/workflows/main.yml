@@ -15,23 +15,11 @@ jobs:
       NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
       NOTION_READER_DATABASE_ID: ${{ secrets.NOTION_READER_DATABASE_ID }}
       NOTION_FEEDS_DATABASE_ID: ${{ secrets.NOTION_FEEDS_DATABASE_ID }}
+      NOTION_SOURCE_DATABASE_ID: ${{ secrets.NOTION_READER_DATABASE_ID }}
       RUN_FREQUENCY: 86400 # in seconds
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: List Repository Files
-        run: ls -R
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16 # Ensure compatibility with the Notion SDK
-
-      - name: Install Dependencies
-        run: npm install @notionhq/client
-
       - name: Update Notion Feed
         run: |
-          curl -o index.js https://raw.githubusercontent.com/ravgeetdhillon/notion-feeder/build/dist/index.js
-          node index.js
+          curl -L -o notion-feed https://github.com/abereghici/notion-feed.rs/raw/build/build/notion-feed 
+          chmod +x ./notion-feed 
+          ./notion-feed
