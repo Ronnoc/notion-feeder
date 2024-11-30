@@ -31,14 +31,6 @@ jobs:
       - name: Install Dependencies
         run: npm install @notionhq/client
 
-      - name: Fetch Items from Feeds Database
-        run: |
-          echo "Fetching data from the Notion Feeds database..."
-          node fetch-feeds.js
-        env:
-          NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
-          NOTION_FEEDS_DATABASE_ID: ${{ secrets.NOTION_FEEDS_DATABASE_ID }}
-
       - name: Update Notion Feed
         run: |
           node src/index.js
