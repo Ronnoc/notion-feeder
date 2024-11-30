@@ -2,12 +2,14 @@ name: Get Feed
 
 on:
   schedule:
-    - cron: '30 12 * * *' # 6pm IST
+    - cron: "30 12 * * *" # 6pm IST
   workflow_dispatch:
   workflow_run:
     workflows: ["Release"]
     types:
       - completed
+    status:
+      - success
 
 jobs:
   get-feed:
