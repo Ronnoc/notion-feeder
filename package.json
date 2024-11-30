@@ -1,6 +1,5 @@
 {
   "name": "notion-feed-reader",
-  "type": "module",
   "version": "1.0.0",
   "private": true,
   "description": "A Node app for creating a Feed Reader in Notion.",
