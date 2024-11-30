@@ -48227,12 +48227,26 @@ const {
 async function getNewFeedItemsFrom(feedUrl) {
   const parser = new (rss_parser_default())();
   let rss;
+  let attempts = 0;
+  const maxAttempts = 3;
+  const retryDelay = 3000; // Delay in milliseconds before retrying
 
-  try {
-    rss = await parser.parseURL(feedUrl);
-  } catch (error) {
-    console.error(error);
-    return [];
+  while (attempts < maxAttempts) {
+    try {
+      rss = await parser.parseURL(feedUrl);
+      break; // Exit loop if request is successful
+    } catch (error) {
+      attempts++;
+      console.error(`Error fetching feed from ${feedUrl} (Attempt ${attempts}):`, error.message);
+
+      if (attempts >= maxAttempts) {
+        console.error(`Failed to fetch feed after ${maxAttempts} attempts.`);
+        return []; // Return an empty array if all retries fail
+      }
+
+      console.log(`Retrying in ${retryDelay / 1000} seconds...`);
+      await new Promise(resolve => setTimeout(resolve, retryDelay)); // Wait before retrying
+    }
   }
 
   const currentTime = new Date().getTime() / 1000; // Filter out items that fall in the run frequency range
@@ -48256,7 +48270,7 @@ async function getNewFeedItems() {
     } = feeds[i];
     const feedItems = await getNewFeedItemsFrom(feedUrl);
     allNewFeedItems = [...allNewFeedItems, ...feedItems];
-  } // sort feed items by published date
+  } // Sort feed items by published date
 
 
   allNewFeedItems.sort((a, b) => new Date(a.pubDate) - new Date(b.pubDate));
