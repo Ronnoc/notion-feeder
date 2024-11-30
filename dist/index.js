@@ -56901,9 +56901,7 @@ async function getNewFeedItemsFrom(feedUrl) {
     // Fetch the RSS feed as a string using axios
     const {
       data: rssString
-    } = await lib_axios.get(feedUrl, {}); // Debug: Log the raw RSS string to inspect its contents
-
-    console.log('Raw RSS Feed String:', rssString); // Parse the RSS string into a JSON object
+    } = await lib_axios.get(feedUrl, {}); // Parse the RSS string into a JSON object
 
     const rss = await parser.parseString(rssString); // Debug: Log the parsed JSON object to check its structure
 
@@ -57907,9 +57905,11 @@ function jsonToNotionBlocks(markdownContent) {
 
 function htmlToNotionBlocks(htmlContent) {
   const markdownJson = htmlToMarkdownJSON(htmlContent);
+  console.log('Parsed markdownJson (JSON):', JSON.stringify(markdownJson, null, 2));
   return jsonToNotionBlocks(markdownJson);
 }
 ;// CONCATENATED MODULE: ./src/index.js
+
 
 
 
@@ -57922,10 +57922,13 @@ async function index() {
 
     for (let i = 0; i < feedItems.length; i++) {
       const item = feedItems[i];
+      const {
+        data: pageData
+      } = await lib_axios.get(item.link, {});
       const notionItem = {
         title: item.title,
         link: item.link,
-        content: htmlToNotionBlocks(item.content)
+        content: htmlToNotionBlocks(pageData)
       };
       console.log(`Adding feed item to Notion: ${notionItem.title}`);
       await addFeedItemToNotion(notionItem);
