@@ -22,9 +22,10 @@ async function getNewFeedItemsFrom(feedUrl) {
     console.log('Parsed RSS Feed (JSON):', JSON.stringify(rss, null, 2));
 
     // add feedUrl to each item
-    rss.items.forEach((item) => {
-      item.feedUrl = feedUrl;
-    });
+    rss.items = rss.items.map((item) => ({
+      ...item,
+      feedUrl: feedUrl,
+    }));
 
     return rss.items;
 
